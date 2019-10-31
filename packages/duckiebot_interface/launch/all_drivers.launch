@@ -10,37 +10,4 @@
         <arg name="param_file_name" value="$(arg robot_type)"/>
     </include>
 
-    <!-- LED Emitter: reads ROS messages and commands the LEDs -->
-    <group unless="$(eval arg('robot_type') == 'watchtower')">
-        <include file="$(find led_emitter)/launch/led_emitter_node.launch">
-            <arg name="veh" value="$(arg veh)"/>
-            <arg name="robot_type" value="$(arg robot_type)"/>
-        </include>
-    </group>
-
-
-    <!-- Joystick: reads from a physical joystick and produces ROS messages -->
-    <group if="$(eval arg('robot_type') == 'duckiebot')">
-        <include file="$(find joystick)/launch/joystick_node.launch">
-            <arg name="veh" value="$(arg veh)"/>
-            <arg name="param_file_name" value="$(arg param_file_name)"/>
-        </include>
-
-        <!-- Wheel Drivers: reads ROS messages and spins the motors -->
-        <include file="$(find wheels_driver)/launch/wheels_driver_node.launch">
-            <arg name="veh" value="$(arg veh)"/>
-            <arg name="param_file_name" value="$(arg param_file_name)"/>
-        </include>
-
-   </group>
-
-    <!-- Traffic Light (Traffic Light robot only): commands the LEDs of a traffic light -->
-    <group if="$(eval arg('robot_type') == 'traffic_light')">
-        <remap from="led_emitter_node/custom_pattern" to="~custom_pattern"/>
-        <include file="$(find traffic_light)/launch/traffic_light_node.launch">
-            <arg name="veh" value="$(arg veh)"/>
-        </include>
-    </group>
-
-
 </launch>
