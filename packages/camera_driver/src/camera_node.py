@@ -24,6 +24,8 @@ class CameraNode(DTROS):
         #self.parameters['~exposure_mode'] = None
         rospy.set_param('~bag_path', '/data/bags/4-way-straight.bag')
         self.parameters['~bag_path'] = None
+        rospy.set_param('~time_scaler', 1.0)
+        self.parameters['~time_scaler'] = None
         self.updateParameters()
 
         # Setup publishers
@@ -32,6 +34,7 @@ class CameraNode(DTROS):
         self.pub_camera_info = self.publisher("~camera_info", CameraInfo, queue_size=1)
 
         self.bag_path = self.parameters['~bag_path']
+        self.time_scaler = self.parameters['~time_scaler']
         # String to find topic of form '/[duckiebot name]/camera_node/image/compressed'
         self.topic_match = '/camera_node/image/compressed'
 
@@ -57,7 +60,7 @@ class CameraNode(DTROS):
             img_msg = bag_msg.message
 
             sleep_duration = timestamp - last_timestamp
-            rospy.sleep(sleep_duration)
+            rospy.sleep(sleep_duration * self.time_scaler)
 
             last_timestamp = self.publishBagMessage(bag_msg)
 
@@ -95,6 +98,7 @@ class CameraNode(DTROS):
 
             if self.parametersChanged:
                 self.bag_path = self.parameters['~bag_path']
+                self.time_scaler = self.parameters['~time_scaler']
                 self.parametersChanged = False
                 self.log("Parameters updated.")
 
