@@ -44,6 +44,9 @@ class CameraNode(DTROS):
         timestamp = bag_msg.timestamp
         msg = bag_msg.message
 
+        # Write current time into header
+        msg.header.stamp = rospy.Time.now()
+
         self.log("Publishing message. (time={})".format(timestamp))
         self.pub_img.publish(msg)
 
