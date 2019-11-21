@@ -136,6 +136,10 @@ class CameraNode(DTROS):
 
                     # Send reset signal
                     self.publishReset()
+                    rospy.sleep(rospy.Duration.from_sec(1))
+                    self.publishReset()
+                    rospy.sleep(rospy.Duration.from_sec(1))
+
 
                     topic_to_publish = topics_filtered[0]
                     self.log("Publishing frames from topic '{}'.".format(topic_to_publish))
